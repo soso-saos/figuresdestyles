@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QCM Figures de Style - Reconnaissance de Définition</title>
+    
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f7f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 20px 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .quiz-container {
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 900px;
+            max-width: 100%;
+            overflow: hidden;
+        }
+        .quiz-header {
+            background-color: #7952b3; /* Couleur violette pour un thème littéraire/éducatif */
+            color: white;
+            padding: 1.5rem 2rem;
+        }
+        .quiz-header h1 {
+            margin: 0;
+            font-size: 1.6rem;
+            text-align: center;
+        }
+        .quiz-header p {
+            text-align: center;
+            margin: 10px 0 0;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        .quiz-body {
+            padding: 2rem;
+        }
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+        .answers-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .answer-item {
+            display: flex;
+            align-items: center;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+        .answer-item:hover:not(.disabled) {
+            background-color: #e9ecef;
+            border-color: #7952b3;
+        }
+        .answer-item.selected {
+              background-color: #e4d7f5; /* Violet clair pour sélection */
+              border-color: #7952b3;
+        }
+        .answer-item.correct {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+            font-weight: bold;
+        }
+        .answer-item.incorrect {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+            font-weight: bold;
+        }
+        .answer-item.disabled {
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+        .quiz-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            border-top: 1px solid #e9ecef;
+        }
+        .score {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        .next-btn, .restart-btn {
+            background-color: #7952b3; /* Couleur principale */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            display: none;
+        }
+        .next-btn:hover, .restart-btn:hover {
+            background-color: #61408c;
+        }
+        .result-screen {
+            text-align: center;
+            padding: 3rem;
+        }
+        .result-screen h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        .result-screen p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        .explanation-box {
+            background-color: #f0f8ff; /* Bleu très clair */
+            border: 1px solid #cce5ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            text-align: left;
+            display: none;
+        }
+        .explanation-box p {
+            font-size: 0.95rem;
+            margin: 0;
+            color: #004085;
+        }
+    </style>
+    </head>
+<body>
+
+<div class="quiz-container" id="quiz">
+    <div class="quiz-header">
+        <h1>QCM Figures de Style : Reconnaissance des Définitions</h1>
+        <p id="progress">Question 1/26</p>
+    </div>
+    <div class="quiz-body">
+        <h2 id="question" class="question-text">Question text</h2>
+        <ul id="answer-buttons" class="answers-list">
+        </ul>
+        <div id="explanation-box" class="explanation-box">
+            <p id="explanation-text"></p>
+        </div>
+    </div>
+    <div class="quiz-footer">
+        <div id="score" class="score">Score: 0/26</div>
+        <button id="next-btn" class="next-btn">Valider</button>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        // 26 DÉFINITIONS BASÉES SUR VOTRE LISTE
+        { questionText: "Quelle figure est la **répétition d'un mot ou d'un groupe de mots en début de phrase ou de vers successifs** ?", options: { A: "La Répétition", B: "L'Anaphore", C: "La Gradation", D: "Le Parallélisme" }, answer: "B", explanation: "L'Anaphore est la **répétition d'un même mot en début de phrase** (Ex: *Rien ne l'arrête, rien ne l'étonne...*).", figure: "Anaphore" },
+        { questionText: "Quelle figure est l'**emploi d'un terme inutile pour le sens (redondance)** ?", options: { A: "La Périphrase", B: "La Litote", C: "Le Pléonasme", D: "L'Hyperbole" }, answer: "C", explanation: "Le Pléonasme est l'**emploi d'un terme inutile** (Ex: *Monter en haut*).", figure: "Pléonasme (Redondance)" },
+        { questionText: "Quelle figure est la **répétition de la même construction syntaxique ou du même rythme** ?", options: { A: "Le Chiasme", B: "Le Parallélisme", C: "La Répétition", D: "L'Antithèse" }, answer: "B", explanation: "Le Parallélisme est la **répétition de la même construction** (Ex: *Le matin est froid ; le soir est chaud*).", figure: "Parallélisme" },
+        { questionText: "Quelle figure est la **succession de termes d'intensité croissante** ?", options: { A: "La Gradation ascendante", B: "La Gradation descendante", C: "L'Hyperbole", D: "L'Accumulation" }, answer: "A", explanation: "La Gradation ascendante est la **succession de termes d'intensité croissante** (Ex: *Va, cours, vole...*).", figure: "Gradation ascendante" },
+        { questionText: "Quelle figure est la **succession de termes d'intensité décroissante** ?", options: { A: "La Gradation descendante", B: "Le Pléonasme", C: "La Répétition", D: "La Litote" }, answer: "A", explanation: "La Gradation descendante est la **succession de termes d'intensité décroissante** (Ex: *Il pleut, il mouillasse, il bruine*).", figure: "Gradation descendante" },
+        { questionText: "Quelle figure est la **simple réutilisation du même mot ou de la même expression dans le texte** ?", options: { A: "L'Anaphore", B: "L'Allitération", C: "La Répétition", D: "La Synecdoque" }, answer: "C", explanation: "La Répétition est le **simple réemploi d'un même mot** (Ex: *C'est beau, si beau*).", figure: "Répétition" },
+        { questionText: "Quelle figure est le **croisement dans la construction des termes (A-B / B'-A')** ?", options: { A: "Le Parallélisme", B: "L'Antithèse", C: "Le Chiasme", D: "Le Zeugme" }, answer: "C", explanation: "Le Chiasme est le **croisement des termes** (Ex: *Manger pour vivre, vivre pour manger*).", figure: "Chiasme" },
+        { questionText: "Quelle figure est le **rapprochement de deux termes ou idées opposés** ?", options: { A: "L'Oxymore", B: "L'Antiphrase", C: "L'Antithèse", D: "Le Paradoxe" }, answer: "C", explanation: "L'Antithèse est le **rapprochement de deux idées opposées** (Ex: *Le ciel et l'enfer*).", figure: "Antithèse" },
+        { questionText: "Quelle figure est le **rapprochement de deux termes de sens contradictoires dans la même expression** ?", options: { A: "L'Antithèse", B: "L'Oxymore", C: "La Métaphore", D: "Le Paradoxe" }, answer: "B", explanation: "L'Oxymore est le **rapprochement de termes contradictoires** (Ex: *Une obscure clarté*).", figure: "Oxymore" },
+        { questionText: "Quelle figure est le **rattachement à un seul mot (verbe) de compléments qui ne sont pas de même nature (concret/abstrait)** ?", options: { A: "Le Pléonasme", B: "Le Chiasme", C: "Le Zeugme", D: "L'Ellipse" }, answer: "C", explanation: "Le Zeugme est le **rattachement d'un verbe à des compléments hétérogènes** (Ex: *Il buvait du vin et de la tristesse*).", figure: "Zeugme" },
+        { questionText: "Quelle figure est le fait d'**attribuer des caractéristiques humaines à un objet, un animal ou une idée** ?", options: { A: "L'Allégorie", B: "La Métaphore", C: "La Personnification", D: "La Comparaison" }, answer: "C", explanation: "La Personnification est le fait d'**attribuer des traits humains à une chose** (Ex: *Le vent hurlait*).", figure: "Personnification" },
+        { questionText: "Quelle figure est la **représentation d'une idée abstraite sous une forme concrète, souvent une figure humaine** ?", options: { A: "La Périphrase", B: "La Synecdoque", C: "L'Allégorie", D: "La Métaphore" }, answer: "C", explanation: "L'Allégorie est la **représentation concrète d'une idée abstraite** (Ex: *La Faucheuse* pour la Mort).", figure: "Allégorie" },
+        { questionText: "Quelle figure est le **rapprochement de deux éléments avec un outil de comparaison (comme, tel, semblable à...)** ?", options: { A: "La Métaphore", B: "La Périphrase", C: "La Comparaison", D: "L'Antithèse" }, answer: "C", explanation: "La Comparaison est le **rapprochement avec un outil de liaison**.", figure: "Comparaison" },
+        { questionText: "Quelle figure est le **rapprochement de deux éléments SANS outil de comparaison** ?", options: { A: "La Comparaison", B: "La Métaphore", C: "L'Allégorie", D: "La Personnification" }, answer: "B", explanation: "La Métaphore est le **rapprochement SANS outil de liaison** (Ex: *Un mur d'eau*).", figure: "Métaphore" },
+        { questionText: "Quelle figure est l'**exagération pour mettre en valeur une idée ou une situation** ?", options: { A: "La Gradation", B: "La Litote", C: "L'Hyperbole", D: "Le Pléonasme" }, answer: "C", explanation: "L'Hyperbole est l'**exagération excessive** (Ex: *Je l'ai dit mille fois*).", figure: "Hyperbole" },
+        { questionText: "Quelle figure est l'**énoncé qui contient une contradiction logique (il défie la logique)** ?", options: { A: "L'Oxymore", B: "Le Paradoxe", C: "L'Antithèse", D: "L'Antiphrase" }, answer: "B", explanation: "Le Paradoxe est l'**énoncé d'une idée contraire à la logique** (Ex: *Le bonheur rend malheureux*).", figure: "Paradoxe" },
+        { questionText: "Quelle figure est de **dire moins pour faire entendre beaucoup plus, en utilisant souvent la négation** ?", options: { A: "L'Euphémisme", B: "La Prétérition", C: "La Litote", D: "L'Antiphrase" }, answer: "C", explanation: "La Litote est de **dire moins pour suggérer plus** (Ex: *Je ne dis pas non*).", figure: "Litote" },
+        { questionText: "Quelle figure est l'**atténuation d'une idée ou d'un fait brutal ou désagréable** ?", options: { A: "La Litote", B: "L'Euphémisme", C: "La Périphrase", D: "Le Paradoxe" }, answer: "B", explanation: "L'Euphémisme est l'**atténuation d'une réalité dure** (Ex: *Il nous a quittés*).", figure: "Euphémisme" },
+        { questionText: "Quelle figure est d'**annoncer qu'on ne va pas parler de quelque chose, pour justement en parler** ?", options: { A: "La Litote", B: "La Prétérition", C: "L'Ellipse", D: "Le Zeugme" }, answer: "B", explanation: "La Prétérition est de **feindre d'omettre un sujet**.", figure: "Prétérition" },
+        { questionText: "Quelle figure est le **remplacement d'un terme par un autre qui lui est lié par un rapport logique (contenant/contenu, auteur/œuvre)** ?", options: { A: "La Synecdoque", B: "La Périphrase", C: "La Métonymie", D: "Le Pléonasme" }, answer: "C", explanation: "La Métonymie est le **remplacement par un terme lié logiquement** (Ex: *Boire un verre*).", figure: "Métonymie" },
+        { questionText: "Quelle figure est la **variété de la métonymie qui désigne la partie pour le tout (ou l'inverse), ou la matière pour l'objet** ?", options: { A: "La Métonymie", B: "La Synecdoque", C: "La Périphrase", D: "Le Chiasme" }, answer: "B", explanation: "La Synecdoque est la **désignation de la partie par le tout ou de la matière par l'objet** (Ex: *Le fer* pour l'épée).", figure: "Synecdoque" },
+        { questionText: "Quelle figure est de **remplacer un mot par une expression plus longue qui le décrit** ?", options: { A: "La Métaphore", B: "La Périphrase", C: "La Comparaison", D: "L'Euphémisme" }, answer: "B", explanation: "La Périphrase est le **remplacement par une expression descriptive** (Ex: *Le roi des animaux* pour le lion).", figure: "Périphrase" },
+        { questionText: "Quelle figure est la **répétition d'un même son voyelle (retour des voyelles)** ?", options: { A: "L'Allitération", B: "L'Assonance", C: "L'Anaphore", D: "La Répétition" }, answer: "B", explanation: "L'Assonance est la **répétition d'un son voyelle** (Ex: *lourd tourneur...*).", figure: "Assonance" },
+        { questionText: "Quelle figure est la **répétition d'un même son consonne (retour des consonnes)** ?", options: { A: "L'Assonance", B: "L'Allitération", C: "Le Zeugme", D: "Le Pléonasme" }, answer: "B", explanation: "L'Allitération est la **répétition d'un son consonne** (Ex: *Serpents qui sifflent...*).", figure: "Allitération" },
+        { questionText: "Quelle figure est l'**utilisation d'un pronom de manière redondante ou emphatique** (ex: *Il me l'a dit, à moi*) ?", options: { A: "Le Parallélisme", B: "Le Pléonasme", C: "La Pronomase", D: "Le Chiasme" }, answer: "C", explanation: "La Pronomase est l'**utilisation d'un pronom de manière redondante ou emphatique**.", figure: "Pronomase" },
+        { questionText: "Quelle figure est de **dire le contraire de ce que l'on pense, dans une intention ironique** ?", options: { A: "Le Paradoxe", B: "L'Euphémisme", C: "La Litote", D: "L'Antiphrase" }, answer: "D", explanation: "L'Antiphrase est de **dire le contraire par ironie** (Ex: *Quel courage !* pour dire lâche).", figure: "Antiphrase" }
+    ];
+
+    const questionElement = document.getElementById('question');
+    const answerButtons = document.getElementById('answer-buttons');
+    const nextButton = document.getElementById('next-btn');
+    const scoreElement = document.getElementById('score');
+    const quizContainer = document.getElementById('quiz');
+    const progressElement = document.getElementById('progress');
+    const explanationBox = document.getElementById('explanation-box');
+    const explanationText = document.getElementById('explanation-text');
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let currentQuestion;
+
+    function startQuiz() {
+        // Optionnel : questions.sort(() => Math.random() - 0.5); // Pour mélanger les questions
+        currentQuestionIndex = 0;
+        score = 0;
+        scoreElement.innerHTML = `Score: 0/${questions.length}`;
+        showQuestion();
+    }
+
+    function showQuestion() {
+        resetState();
+        currentQuestion = questions[currentQuestionIndex];
+        let questionNo = currentQuestionIndex + 1;
+        
+        // Affichage de la question (la définition simple)
+        questionElement.innerHTML = currentQuestion.questionText;
+        progressElement.innerHTML = `Question ${questionNo}/${questions.length}`;
+
+        currentQuestion.options.A = 'A. ' + currentQuestion.options.A;
+        currentQuestion.options.B = 'B. ' + currentQuestion.options.B;
+        currentQuestion.options.C = 'C. ' + currentQuestion.options.C;
+        currentQuestion.options.D = 'D. ' + currentQuestion.options.D;
+
+        const optionKeys = ['A', 'B', 'C', 'D'];
+        optionKeys.forEach(key => {
+            const li = document.createElement("li");
+            li.innerHTML = currentQuestion.options[key];
+            li.classList.add("answer-item");
+            li.dataset.answerKey = key; 
+            answerButtons.appendChild(li);
+            if (key === currentQuestion.answer) {
+                li.dataset.correct = "true";
+            }
+        });
+
+        nextButton.innerHTML = `Valider`;
+        answerButtons.addEventListener('click', selectAnswer);
+    }
+
+    function resetState() {
+        nextButton.style.display = 'none';
+        explanationBox.style.display = 'none';
+        while (answerButtons.firstChild) {
+            answerButtons.removeChild(answerButtons.firstChild);
+        }
+    }
+
+    function selectAnswer(e) {
+        if (!e.target.matches('.answer-item')) return;
+        
+        const selectedBtn = e.target;
+
+        // On enlève l'écouteur de la liste pour gérer la sélection comme bouton radio
+        Array.from(answerButtons.children).forEach(button => {
+            button.classList.remove('selected');
+        });
+        selectedBtn.classList.add('selected');
+        nextButton.style.display = "block";
+        nextButton.innerHTML = "Valider"; // On force le bouton à Valider après sélection
+    }
+    
+    function checkSingleAnswer() {
+        answerButtons.removeEventListener('click', selectAnswer);
+        const selectedBtn = answerButtons.querySelector('.selected');
+        
+        // Si rien n'est sélectionné, on ne fait rien (normalement empêché par le bouton Valider)
+        if (!selectedBtn) return; 
+
+        const isCorrect = selectedBtn.dataset.correct === "true";
+
+        // Mise à jour du score et de la classe du bouton sélectionné
+        if (isCorrect) {
+            selectedBtn.classList.add("correct");
+            score++;
+        } else {
+            selectedBtn.classList.add("incorrect");
+        }
+        
+        scoreElement.innerHTML = `Score: ${score}/${questions.length}`;
+
+        // Afficher les réponses (pour l'apprentissage)
+        Array.from(answerButtons.children).forEach(button => {
+            if (button.dataset.correct === "true") {
+                button.classList.add("correct");
+            }
+            button.classList.add("disabled"); // Désactiver tous les boutons
+        });
+        
+        // Afficher l'explication
+        explanationText.innerHTML = `<strong>Figure : ${currentQuestion.figure}</strong>. ${currentQuestion.explanation}`;
+        explanationBox.style.display = 'block';
+
+        // Mettre à jour le bouton pour passer à la question suivante
+        nextButton.innerHTML = "Question Suivante";
+    }
+
+
+    function handleNextButton() {
+        if (nextButton.innerHTML === 'Valider') {
+            checkSingleAnswer(); // C'est une question à choix unique (simple)
+        } else {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                showQuestion();
+            } else {
+                showScore();
+            }
+        }
+    }
+
+    function showScore() {
+        let feedback = '';
+        const totalQuestions = questions.length;
+
+        if (score === totalQuestions) {
+            feedback = 'Félicitations ! Maîtrise parfaite de toutes les définitions ! 🏆';
+        } else if (score >= totalQuestions * 0.85) {
+            feedback = 'Bravo ! Excellent score. Votre connaissance est très solide. ✨';
+        } else if (score >= totalQuestions * 0.7) {
+            feedback = 'Bon résultat ! Continuez à réviser, vous êtes proche de la maîtrise. 👍';
+        } else {
+            feedback = 'Une bonne base ! Revoyez les définitions pour améliorer votre score. 📚';
+        }
+
+        quizContainer.innerHTML = `
+            <div class="result-screen">
+                <h2>🎉 Quiz Terminé !</h2>
+                <p>Votre score final est de <strong>${score}</strong> sur ${totalQuestions}.</p>
+                <p>${feedback}</p>
+                <button onclick="location.reload()" class="restart-btn" style="display:block;">Recommencer le Quiz</button>
+            </div>
+        `;
+    }
+
+    nextButton.addEventListener('click', handleNextButton);
+
+    startQuiz();
+</script>
+
+</body>
+</html>
